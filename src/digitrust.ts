@@ -109,7 +109,7 @@ export class DigiTrustVault {
           }
           // Execute the transactions
           let resp = await this.executeTransactionBlock(transactionBlock, strategy);
-          console.log("Tx_block: ", transactionBlock, " -strategy: ", strategy)
+          console.log("Tx resp: ", resp, "Tx_block: ", transactionBlock, " -strategy: ", strategy)
         }
       }
       await setTimeout(delay);

@@ -3,7 +3,7 @@ import {
   fromExportedKeypair,
   toB64
 } from "@mysten/sui.js";
-import { DigiTrustVault } from "./DigiTrustVault";
+import { DigiTrustVault } from "./digitrust";
 import { BinanceBTCtoUSDC } from "./data_sources/binance/BinanceBTCtoUSDC";
 import { CetusPool } from "./dexs/cetus/cetus";
 // import { TurbosPool } from "./dexs/turbos/turbos";
@@ -58,7 +58,7 @@ export const keypair = Ed25519Keypair.deriveKeypair(phrase!);
 //     privateKey: toB64(privateKeyBytes),
 // });
 
-let DigiTrustVault = new DigiTrustVault(keypair);
+let digiTrustVault = new DigiTrustVault(keypair);
 const cetusUSDCtoSUI = new CetusPool(
   "0xcf994611fd4c48e277ce3ffd4d4364c914af2c3cbb05f7bf6facd371de688630",
   coins.USDC,
@@ -86,15 +86,15 @@ const cetusWBTCtoUSDC = new CetusPool(
   coins.USDC
 );
 
-DigiTrustVault.addPool(cetusUSDCtoSUI);
-DigiTrustVault.addPool(cetusCETUStoSUI);
-DigiTrustVault.addPool(cetusUSDCtoCETUS);
+digiTrustVault.addPool(cetusUSDCtoSUI);
+digiTrustVault.addPool(cetusCETUStoSUI);
+digiTrustVault.addPool(cetusUSDCtoCETUS);
 // DigiTrustVault.addPool(turbosSUItoUSDC);
-DigiTrustVault.addPool(cetusWBTCtoUSDC);
-DigiTrustVault.addDataSource(new BinanceBTCtoUSDC());
+digiTrustVault.addPool(cetusWBTCtoUSDC);
+digiTrustVault.addDataSource(new BinanceBTCtoUSDC());
 
 // Trend riding strategies
-DigiTrustVault.addStrategy(
+digiTrustVault.addStrategy(
   new RideTheTrend(
     cetusUSDCtoSUI.uri,
     5,
@@ -105,9 +105,9 @@ DigiTrustVault.addStrategy(
     ],
     RIDE_THE_TREND_LIMIT,
     "RideTheTrend (USDC/SUI)"
-  )
+  ) 
 );
-DigiTrustVault.addStrategy(
+digiTrustVault.addStrategy(
   new RideTheTrend(
     cetusCETUStoSUI.uri,
     5,
@@ -120,7 +120,7 @@ DigiTrustVault.addStrategy(
     "RideTheTrend (CETUS/SUI)"
   )
 );
-DigiTrustVault.addStrategy(
+digiTrustVault.addStrategy(
   new RideTheTrend(
     cetusUSDCtoCETUS.uri,
     5,
@@ -135,7 +135,7 @@ DigiTrustVault.addStrategy(
 );
 
 // Add triangular arbitrage strategy: USDC/SUI -> (CETUS/SUI)^-1 -> (USDC/CETUS)^-1.
-DigiTrustVault.addStrategy(
+digiTrustVault.addStrategy(
   new Arbitrage(
     [
       // {
@@ -157,7 +157,7 @@ DigiTrustVault.addStrategy(
   )
 );
 
-DigiTrustVault.addStrategy(
+digiTrustVault.addStrategy(
   new Arbitrage(
     [
       // {
@@ -175,7 +175,7 @@ DigiTrustVault.addStrategy(
   )
 );
 
-DigiTrustVault.addStrategy(
+digiTrustVault.addStrategy(
   new MarketDifference(
     cetusWBTCtoUSDC,
     "BinanceBTCtoUSDC",
@@ -185,7 +185,7 @@ DigiTrustVault.addStrategy(
   )
 );
 
-DigiTrustVault.addStrategy(
+digiTrustVault.addStrategy(
   new RideTheExternalTrend(
     cetusWBTCtoUSDC.uri,
     "BinanceBTCtoUSDC",
@@ -199,4 +199,4 @@ DigiTrustVault.addStrategy(
 );
 
 // Start the bot
-DigiTrustVault.loop(24, 1000);
+digiTrustVault.loop(24, 1000);

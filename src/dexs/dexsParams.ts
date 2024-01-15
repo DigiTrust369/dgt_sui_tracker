@@ -72,12 +72,4 @@ export type DigiTrustParams = {
    * The amount of cryptocurrency to swap.
    */
   amountIn: number;
-  /**
-   * A boolean value indicating whether the amount is specified as input or output.
-   */
-  amountSpecifiedIsInput: boolean;
-  /**
-   * The maximum allowable slippage for the swap transaction.
-   */
-  slippage: number;
 };

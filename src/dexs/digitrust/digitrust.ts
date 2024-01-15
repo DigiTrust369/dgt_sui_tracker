@@ -66,35 +66,44 @@ export class DigiTrustPool extends Pool<DigiTrustParams>{
             privateKey: toB64(privateKeyBytes),
         });
 
-        const signer = new RawSigner(keypair, provider);
-        transactionBlock.moveCall({
-            target: `${this.package}::${this.module}::swap_dgt`,
-            arguments: [
+        const coins: TransactionArgument[] | undefined =
+        await buildInputCoinForAmount(
+            transactionBlock,
+            BigInt(params.amountIn),
+            params.a2b ? this.coinTypeA : this.coinTypeB,
+            this.senderAddress!,
+            provider
+        );
+
+        if (typeof coins !== "undefined") {
+            transactionBlock.moveCall({
+              target: `${this.package}::${this.module}::PQD`,
+              arguments: [
                 transactionBlock.object(this.uri),
                 transactionBlock.makeMoveVec({
-                    objects:({
-                        "pool":"PQD::swap_dgt"
-                    }),
+                  objects: coins,
                 }),
                 transactionBlock.pure(params.amountIn.toFixed(0), "u64"),
                 transactionBlock.pure(0, "u64"),
                 transactionBlock.object(SUI_CLOCK_OBJECT_ID),
-            ],
-            typeArguments: [this.coinTypeA, this.coinTypeB],
-        });
+              ],
+              typeArguments: [this.coinTypeA, this.coinTypeB],
+            });
+      
+            return transactionBlock;
+          }
+      
+          return transactionBlock;
+    }
 
-        const tx = await signer.signAndExecuteTransactionBlock({
-            transactionBlock: transactionBlock,
-            options: {
-                showInput: true,
-                showEffects: true,
-                showEvents: true,
-                showObjectChanges: true,
-            }
-        });
-
-        console.log("DGT pool: ", tx);
-
-        return transactionBlock;
+    async estimatePriceAndFee(): Promise<{
+        price: number;
+        fee: number;
+    }> {
+    // FIXME: estimate price
+    return {
+        price: 0 ** 2 / 2 ** 128,
+        fee: 0,
+    };
     }
 }
