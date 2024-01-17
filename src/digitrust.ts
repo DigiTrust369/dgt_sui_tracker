@@ -49,19 +49,19 @@ export class DigiTrustVault {
         }
       }
     }
-    logger.info({ strategies: uniqueStrategies }, "strategies");
+    // logger.info({ strategies: uniqueStrategies }, "strategies");
 
     let transactionBlock: TransactionBlock = new TransactionBlock();
     while (new Date().getTime() - startTime < duration) {
       for (const uri in this.dataSources) {
         let dataSource = this.dataSources[uri];
         let data = await dataSource.getData();
-        logger.info(
-          {
-            price: data,
-          },
-          "price"
-        );
+        // logger.info(
+        //   {
+        //     price: data,
+        //   },
+        //   "price"
+        // );
 
         // Push new data to all strategies subscribed to this data source
         for (const strategy of this.strategies[uri]) {
@@ -120,7 +120,6 @@ export class DigiTrustVault {
     transactionBlock: TransactionBlock,
     strategy: Strategy
   ) {
-    console.log("Tx info: ", transactionBlock)
     if (transactionBlock.blockData.transactions.length !== 0) {
       try {
         transactionBlock.setGasBudget(1500000000);

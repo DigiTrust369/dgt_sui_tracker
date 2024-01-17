@@ -10,7 +10,7 @@ import { CetusPool } from "./dexs/cetus/cetus";
 import { Arbitrage } from "./strategies/arbitrage";
 import { MarketDifference } from "./strategies/market_difference";
 import { RideTheTrend } from "./strategies/ride_the_trend";
-import { RideTheExternalTrend } from "./strategies/ride_the_external_trend";
+import { DigiTrustStrategy } from "./strategies/digitrust_strategy";
 
 // Convenience map from name to address for commonly used coins
 export const coins = {
@@ -64,16 +64,16 @@ const cetusUSDCtoSUI = new CetusPool(
   coins.USDC,
   coins.SUI
 );
-const cetusCETUStoSUI = new CetusPool(
-  "0x2e041f3fd93646dcc877f783c1f2b7fa62d30271bdef1f21ef002cebf857bded",
-  coins.CETUS,
-  coins.SUI
-);
-const cetusUSDCtoCETUS = new CetusPool(
-  "0x238f7e4648e62751de29c982cbf639b4225547c31db7bd866982d7d56fc2c7a8",
-  coins.USDC,
-  coins.CETUS
-);
+// const cetusCETUStoSUI = new CetusPool(
+//   "0x2e041f3fd93646dcc877f783c1f2b7fa62d30271bdef1f21ef002cebf857bded",
+//   coins.CETUS,
+//   coins.SUI
+// );
+// const cetusUSDCtoCETUS = new CetusPool(
+//   "0x238f7e4648e62751de29c982cbf639b4225547c31db7bd866982d7d56fc2c7a8",
+//   coins.USDC,
+//   coins.CETUS
+// );
 // const turbosSUItoUSDC = new TurbosPool(
 //   "0x5eb2dfcdd1b15d2021328258f6d5ec081e9a0cdcfa9e13a0eaeb9b5f7505ca78",
 //   coins.SUI,
@@ -87,106 +87,106 @@ const cetusWBTCtoUSDC = new CetusPool(
 );
 
 digiTrustVault.addPool(cetusUSDCtoSUI);
-digiTrustVault.addPool(cetusCETUStoSUI);
-digiTrustVault.addPool(cetusUSDCtoCETUS);
+// digiTrustVault.addPool(cetusCETUStoSUI);
+// digiTrustVault.addPool(cetusUSDCtoCETUS);
 // DigiTrustVault.addPool(turbosSUItoUSDC);
 digiTrustVault.addPool(cetusWBTCtoUSDC);
 digiTrustVault.addDataSource(new BinanceBTCtoUSDC());
 
 // Trend riding strategies
-digiTrustVault.addStrategy(
-  new RideTheTrend(
-    cetusUSDCtoSUI.uri,
-    5,
-    10,
-    [
-      defaultAmount[cetusUSDCtoSUI.coinTypeA],
-      defaultAmount[cetusUSDCtoSUI.coinTypeB],
-    ],
-    RIDE_THE_TREND_LIMIT,
-    "RideTheTrend (USDC/SUI)"
-  ) 
-);
-digiTrustVault.addStrategy(
-  new RideTheTrend(
-    cetusCETUStoSUI.uri,
-    5,
-    10,
-    [
-      defaultAmount[cetusCETUStoSUI.coinTypeA],
-      defaultAmount[cetusCETUStoSUI.coinTypeB],
-    ],
-    RIDE_THE_TREND_LIMIT,
-    "RideTheTrend (CETUS/SUI)"
-  )
-);
-digiTrustVault.addStrategy(
-  new RideTheTrend(
-    cetusUSDCtoCETUS.uri,
-    5,
-    10,
-    [
-      defaultAmount[cetusUSDCtoCETUS.coinTypeA],
-      defaultAmount[cetusUSDCtoCETUS.coinTypeB],
-    ],
-    RIDE_THE_TREND_LIMIT,
-    "RideTheTrend (USDC/CETUS)"
-  )
-);
+// digiTrustVault.addStrategy(
+//   new RideTheTrend(
+//     cetusUSDCtoSUI.uri,
+//     5,
+//     10,
+//     [
+//       defaultAmount[cetusUSDCtoSUI.coinTypeA],
+//       defaultAmount[cetusUSDCtoSUI.coinTypeB],
+//     ],
+//     RIDE_THE_TREND_LIMIT,
+//     "RideTheTrend (USDC/SUI)"
+//   ) 
+// );
+// digiTrustVault.addStrategy(
+//   new RideTheTrend(
+//     cetusCETUStoSUI.uri,
+//     5,
+//     10,
+//     [
+//       defaultAmount[cetusCETUStoSUI.coinTypeA],
+//       defaultAmount[cetusCETUStoSUI.coinTypeB],
+//     ],
+//     RIDE_THE_TREND_LIMIT,
+//     "RideTheTrend (CETUS/SUI)"
+//   )
+// );
+// digiTrustVault.addStrategy(
+//   new RideTheTrend(
+//     cetusUSDCtoCETUS.uri,
+//     5,
+//     10,
+//     [
+//       defaultAmount[cetusUSDCtoCETUS.coinTypeA],
+//       defaultAmount[cetusUSDCtoCETUS.coinTypeB],
+//     ],
+//     RIDE_THE_TREND_LIMIT,
+//     "RideTheTrend (USDC/CETUS)"
+//   )
+// );
 
 // Add triangular arbitrage strategy: USDC/SUI -> (CETUS/SUI)^-1 -> (USDC/CETUS)^-1.
-digiTrustVault.addStrategy(
-  new Arbitrage(
-    [
-      // {
-      //   pool: turbosSUItoUSDC.uri,
-      //   a2b: true,
-      // },
-      {
-        pool: cetusUSDCtoCETUS.uri,
-        a2b: true,
-      },
-      {
-        pool: cetusCETUStoSUI.uri,
-        a2b: true,
-      },
-    ],
-    defaultAmount[coins.SUI],
-    ARBITRAGE_RELATIVE_LIMIT,
-    "Arbitrage: SUI -Turbos-> USDC -Cetus-> CETUS -Cetus-> SUI"
-  )
-);
+// digiTrustVault.addStrategy(
+//   new Arbitrage(
+//     [
+//       // {
+//       //   pool: turbosSUItoUSDC.uri,
+//       //   a2b: true,
+//       // },
+//       {
+//         pool: cetusUSDCtoCETUS.uri,
+//         a2b: true,
+//       },
+//       {
+//         pool: cetusCETUStoSUI.uri,
+//         a2b: true,
+//       },
+//     ],
+//     defaultAmount[coins.SUI],
+//     ARBITRAGE_RELATIVE_LIMIT,
+//     "Arbitrage: SUI -Turbos-> USDC -Cetus-> CETUS -Cetus-> SUI"
+//   )
+// );
+
+// digiTrustVault.addStrategy(
+//   new Arbitrage(
+//     [
+//       // {
+//       //   pool: turbosSUItoUSDC.uri,
+//       //   a2b: true,
+//       // },
+//       {
+//         pool: cetusUSDCtoSUI.uri,
+//         a2b: true,
+//       },
+//     ],
+//     defaultAmount[coins.SUI],
+//     ARBITRAGE_RELATIVE_LIMIT,
+//     "Arbitrage: SUI -Turbos-> USDC -Cetus-> SUI"
+//   )
+// );
+
+// digiTrustVault.addStrategy(
+//   new MarketDifference(
+//     cetusWBTCtoUSDC,
+//     "BinanceBTCtoUSDC",
+//     [defaultAmount[coins.WBTC], defaultAmount[coins.USDC]],
+//     MARKET_DIFFERENCE_LIMIT,
+//     "Market diff: (W)BTC/USDC, Binance vs CETUS"
+//   )
+// );
 
 digiTrustVault.addStrategy(
-  new Arbitrage(
-    [
-      // {
-      //   pool: turbosSUItoUSDC.uri,
-      //   a2b: true,
-      // },
-      {
-        pool: cetusUSDCtoSUI.uri,
-        a2b: true,
-      },
-    ],
-    defaultAmount[coins.SUI],
-    ARBITRAGE_RELATIVE_LIMIT,
-    "Arbitrage: SUI -Turbos-> USDC -Cetus-> SUI"
-  )
-);
-
-digiTrustVault.addStrategy(
-  new MarketDifference(
-    cetusWBTCtoUSDC,
-    "BinanceBTCtoUSDC",
-    [defaultAmount[coins.WBTC], defaultAmount[coins.USDC]],
-    MARKET_DIFFERENCE_LIMIT,
-    "Market diff: (W)BTC/USDC, Binance vs CETUS"
-  )
-);
-
-digiTrustVault.addStrategy(
-  new RideTheExternalTrend(
+  new DigiTrustStrategy(
     cetusWBTCtoUSDC.uri,
     "BinanceBTCtoUSDC",
     5,
@@ -194,7 +194,7 @@ digiTrustVault.addStrategy(
     [defaultAmount[coins.WBTC], defaultAmount[coins.USDC]],
     RIDE_THE_TREND_LIMIT,
     1.0001,
-    "Ride external trend: (W)BTC/USDC, Binance vs CETUS"
+    "DigiTrust strategy: (W)BTC/USDC, Binance vs CETUS"
   )
 );
 
