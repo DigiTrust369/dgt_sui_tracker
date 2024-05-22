@@ -2,6 +2,8 @@ module digitrust::etf {
     use sui::coin::{Coin, TreasuryCap, Self};
     use std::option;
     use sui::transfer;
+    use sui::pay;
+    use std::vector;
     use sui::tx_context::{TxContext, Self};
     use sui::object::{Self, UID, ID};
 
@@ -36,6 +38,8 @@ module digitrust::etf {
         id: UID,
     }
 
+    const ENoCoins: u64 = 0;
+
     #[allow(unused_function)]
     fun init(witness: ETF, ctx: &mut TxContext) {
         let (treasury, metadata) = coin::create_currency(witness, 6, b"ETF", b"", b"", option::none(), ctx);
@@ -52,4 +56,12 @@ module digitrust::etf {
     public entry fun burn(treasury_cap: &mut TreasuryCap<ETF>, coin: Coin<ETF>) {
         coin::burn(treasury_cap, coin);
     }
+
+    // public entry fun transfer<ETF>(coins: Coin<ETF>, amount: u64, recipient: address, ctx: &mut TxContext) {
+    //   assert!(vector::length(&coins) > 0, ENoCoins);
+    // //   let coin = vector::pop_back(&mut coins);
+    //   pay::join_vec(&mut coin, coins);
+    //   pay::split_and_transfer<ETF>(&mut coin, amount, recipient, ctx);
+    //   transfer::transfer(coin, tx_context::sender(ctx))
+    // }
 }

@@ -6,6 +6,8 @@ module digitrust::vault {
     use sui::tx_context::{TxContext, Self};
     use sui::coin::{Coin, Self};
     use sui::balance::{Self};
+    use sui::table::{Self, Table};
+    use sui::vec_set::{Self, VecSet};
     use sui::transfer::Self;
     use sui::clock::Clock;
     use std::string::{Self, String};
@@ -19,7 +21,25 @@ module digitrust::vault {
         manager: address, 
     }
 
-    public fun new_vault<Base, Quote>(payment: &mut Coin<SUI>, ctx: &mut TxContext) {
+    // struct VaultConfig has store{
+    //     started_epoch: u64,
+    //     end_epoch: u64,
+    //     vault_apy: FixedPoint64, // Updated weekly with the average rate. Vaults with 6+ mo. rely on the team's estimation.
+    //     debt_balance: u64, // Outstanding debts from issuing PT tokens
+    //     enable_mint: bool,
+    //     enable_exit: bool,
+    //     enable_redeem: bool
+    // }
+
+    // public fun get_vault_config(table: &mut Table<String, VaultConfig>): &mut VaultConfig  {
+    //     let vault_name = token_to_name<P>();
+    //     let has_registered = table::contains(table, vault_name);
+    //     assert!(has_registered, E_NOT_REGISTERED);
+
+    //     table::borrow_mut<String, VaultConfig>(table, vault_name)
+    // }
+
+    public fun create_dgt_vault<Base, Quote>(payment: &mut Coin<SUI>, ctx: &mut TxContext) {
         let balance = coin::balance_mut(payment);
         let fee = balance::split(balance, 100 * 1_000_000_000);
         let coin = coin::from_balance(fee, ctx);
