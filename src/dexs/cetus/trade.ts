@@ -91,4 +91,6 @@ export async function trade(
 			tradeTxn?.digest
 		}`
 	);
+
+	return tradeTxn?.digest
 }
